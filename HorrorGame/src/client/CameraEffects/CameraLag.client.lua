@@ -6,7 +6,7 @@ local camera = workspace.CurrentCamera
 
 -- How strong the spring is.
 -- Higher = snappier (less lag), lower = floatier (more lag).
-local LAG_STIFFNESS = 12
+local LAG_STIFFNESS = 13
 
 local smoothedCFrame: CFrame? = nil
 

@@ -11,7 +11,7 @@ local BOB_AMPLITUDE_Y = 0.095      -- up/down bounce
 
 -- Sprint modifiers (multiplied on top of base)
 local SPRINT_FREQ_MULT = 1.6       -- faster bob when sprinting
-local SPRINT_AMP_MULT  = 1.5       -- stronger bob when sprinting
+local SPRINT_AMP_MULT  = 1.7       -- stronger bob when sprinting
 
 -- Crouch modifiers
 local CROUCH_FREQ_MULT = 0.7       -- slower bob when crouched
@@ -63,6 +63,16 @@ local function onRenderStepped(dt)
 
 	local isSprinting = humanoid:GetAttribute("IsSprinting") == true
 	local isCrouched  = humanoid:GetAttribute("IsCrouched") == true
+	local isSliding   = humanoid:GetAttribute("IsSliding") == true
+
+	-- No head bob while sliding
+	if isSliding then
+		local alpha = smoothFactor(dt, BOB_SMOOTHNESS)
+		currentOffset = currentOffset:Lerp(Vector3.new(0, 0, 0), alpha)
+		local baseCFrame = camera.CFrame
+		camera.CFrame = baseCFrame * CFrame.new(currentOffset)
+		return
+	end
 
 	-- Decide effective frequency & amplitude based on state
 	local freq    = BOB_FREQUENCY

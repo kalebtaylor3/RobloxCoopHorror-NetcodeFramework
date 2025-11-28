@@ -26,6 +26,10 @@ local currentIntensity = 0
 
 local lastBreathTransform = CFrame.new()
 
+-- Optional: fade breathing a bit while leaning so the lean stays readable
+local LEAN_ATTRIBUTE_NAME = "LeanAmount"
+local LEAN_BREATH_DAMP = 0.7   -- at full lean, reduce breathing to ~30%
+
 local function setupCharacter(char: Model)
 	humanoid = char:WaitForChild("Humanoid")
 	currentIntensity = 0
@@ -48,12 +52,16 @@ local function onRenderStepped(dt)
 	camera = workspace.CurrentCamera
 	if not camera then return end
 
-	local speed = 0
-	if humanoid and humanoid.Health > 0 then
-		speed = humanoid.MoveDirection.Magnitude
-	end
-
-	local idleFactor = 1 - math.clamp(speed * MOVE_FADE, 0, 1)
+		local speed = 0
+		local leanAmount = 0
+		if humanoid and humanoid.Health > 0 then
+			speed = humanoid.MoveDirection.Magnitude
+			leanAmount = math.abs(humanoid:GetAttribute(LEAN_ATTRIBUTE_NAME) or 0)
+		end
+	
+		local idleFactor = 1 - math.clamp(speed * MOVE_FADE, 0, 1)
+		local leanDamp = 1 - math.clamp(leanAmount * LEAN_BREATH_DAMP, 0, 0.95)
+		idleFactor = idleFactor * leanDamp
 
 	-- Smooth intensity so it eases in/out
 	local alpha = smoothFactor(dt, INTENSITY_SMOOTHNESS)

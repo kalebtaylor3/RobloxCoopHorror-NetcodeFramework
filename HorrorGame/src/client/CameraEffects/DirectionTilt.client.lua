@@ -7,7 +7,7 @@ local camera = workspace.CurrentCamera
 
 local MAX_PITCH_FORWARD = math.rad(3)   
 local MAX_PITCH_BACK    = math.rad(4)    
-local MAX_ROLL_SIDE     = math.rad(2.5) 
+local MAX_ROLL_SIDE     = math.rad(2) 
 
 
 local TILT_SMOOTHNESS   = 10          
